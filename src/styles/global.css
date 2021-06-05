@@ -192,3 +192,25 @@ body {
 .loader {
   background-color: var(--backgroundColor);
 }
+
+.dashboard-layout .trigger {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.dashboard-layout .trigger:hover {
+  color: #1890ff;
+}
+
+.dashboard-layout .logo {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
+}

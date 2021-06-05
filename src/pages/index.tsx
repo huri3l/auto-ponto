@@ -1,9 +1,9 @@
 import Head from 'next/head'
-import { Form, Input, Button, Select, Alert, notification } from 'antd'
+import { useEffect } from 'react'
+import { Form, Input, Button, Select, Alert, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 
 import useAuth from '../hooks/useAuth'
-import { useEffect, useState } from 'react'
 
 const cardStyle = {
   display: 'flex',
@@ -15,20 +15,17 @@ const cardStyle = {
 export default function Login() {
   const { signIn, loginError } = useAuth()
 
-  useEffect(()=>{
-    if(loginError){
-
-        notification.error({
-          message: 'Login incorreto',
-          description:
-            'Usuário ou senha incorreta.'
-        });
-
+  useEffect(() => {
+    if (loginError) {
+      message.error({
+        content: 'Usuário ou senha inválidos!'
+      })
     }
-  },[loginError])
+  }, [loginError])
 
-  async function handleSignIn(e) {
-    await signIn({ app: e.app, username: e.username, password: e.password })
+  async function handleSignIn(e: any) {
+    if (e.app && e.username && e.password)
+      await signIn({ app: e.app, username: e.username, password: e.password })
   }
 
   return (
@@ -45,30 +42,37 @@ export default function Login() {
         >
           <Form.Item
             name="app"
-            //label="Aplicação"
-            initialValue="kairos"
+            rules={[{ required: true, message: 'Selecione o app!' }]}
+            // initialValue="kairos"
           >
-            <Select>
+            <Select
+              showSearch
+              placeholder="Selecione o app"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
               <Select.Option value="kairos">Kairos</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item
             name="username"
-            rules={[{ message: 'Please input your Username!' }]}
+            rules={[{ required: true, message: 'Digite seu usuário!' }]}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
+              placeholder="Usuário"
             />
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[{ message: 'Please input your Password!' }]}
+            rules={[{ required: true, message: 'Digite sua senha!' }]}
           >
-            <Input
+            <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
-              placeholder="Password"
+              placeholder="Senha"
             />
           </Form.Item>
           <Form.Item>
@@ -77,17 +81,9 @@ export default function Login() {
               htmlType="submit"
               className="login-form-button"
             >
-              Log in
+              Entrar
             </Button>
           </Form.Item>
-          {loginError &&
-            <Alert
-              message="Login incorreto"
-              description='Usuário ou senha incorreta.'
-              type="error"
-              showIcon
-            />
-          }
         </Form>
       </div>
     </div>

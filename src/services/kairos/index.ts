@@ -10,8 +10,7 @@ type clockInRequestData = {
 }
 
 const auth = (cookie: any) => {
-  if(cookie)
-    api.defaults.headers.common['cookie'] = cookie
+  if (cookie) api.defaults.headers.common['cookie'] = cookie
 }
 
 const login = async (data: SignInRequestData) => {

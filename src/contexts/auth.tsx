@@ -11,8 +11,6 @@ import Router from 'next/router'
 import self from '../services/self'
 import useLocalStorage from '../hooks/useLocalStorage'
 
-
-
 type User = string
 
 type SignInData = {
@@ -26,9 +24,9 @@ type AuthContextType = {
   setApplication: Dispatch<SetStateAction<string>>
   loading: boolean
   setLoading: Dispatch<SetStateAction<boolean>>
+  user: User
   isAuthenticated: boolean
   loginError: boolean
-  user: User
   signIn: (data: SignInData) => Promise<void>
   signOut: () => Promise<void>
 }
@@ -56,11 +54,9 @@ export function AuthProvider({ children }) {
     } catch (err) {
       console.log(err)
     }
-    console.log(parseCookies())
-    console.log(user)
   }, [user])
 
-    async function verifyLogin(application) {
+  async function verifyLogin(application) {
     if (application !== null) {
       try {
         setLoginError(false)
@@ -77,11 +73,9 @@ export function AuthProvider({ children }) {
         setLoginError(true)
         signOut()
       }
-      setLoading(false)
     }
-
+    setLoading(false)
   }
-
 
   async function signIn({ app, username, password }: SignInData) {
     setLoading(true)
@@ -103,7 +97,6 @@ export function AuthProvider({ children }) {
   }
 
   async function signOut() {
-
     setLoading(true)
     await removeApplication()
     destroyCookie(undefined, 'nextauth.token')
@@ -121,9 +114,9 @@ export function AuthProvider({ children }) {
         setLoading,
         user,
         isAuthenticated,
-        signIn,
-        signOut,
         loginError,
+        signIn,
+        signOut
       }}
     >
       {children}
