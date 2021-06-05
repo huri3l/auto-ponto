@@ -74,19 +74,17 @@ export function AuthProvider({ children }) {
   async function signIn({ app, username, password }: SignInData) {
     setLoading(true)
     try {
-      setApplication(application)
+      setApplication(app)
       const res = await self.post('/api/login', {
         application: app,
         username,
         password
       })
-      const token = res.data.token
+      const token = res.data
 
       setCookie(undefined, 'nextauth.token', token, {
         maxAge: 60 * 60 * 1 // 1 hour
       })
-
-      self.defaults.headers['cookie'] = token
     } catch (err) {
       console.log(err)
     }
@@ -95,6 +93,7 @@ export function AuthProvider({ children }) {
   }
 
   async function signOut() {
+
     setLoading(true)
     destroyCookie(undefined, 'nextauth.token')
     setUser(null)

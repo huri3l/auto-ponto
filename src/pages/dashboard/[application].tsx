@@ -27,5 +27,5 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 
   // const application: string = ctx.query.application as string
 
-  return
+  return {props:{}}
 }

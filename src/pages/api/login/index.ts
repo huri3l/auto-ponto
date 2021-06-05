@@ -8,10 +8,7 @@ export default async function login(
 ) {
   if (request.method === 'POST') {
     try {
-      const res = await api[request.body.application].login(
-        request.body.username,
-        request.body.password
-      )
+      const res = await api[request.body.application].login(request.body)
       response.status(res.status).json(res.data)
     } catch (err) {
       console.log(err)
