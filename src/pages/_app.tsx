@@ -1,13 +1,19 @@
+import { Space } from "antd"
 import { AppProps } from 'next/app'
 import { AuthProvider } from '../contexts/auth'
 import 'antd/dist/antd.css'
 import '../styles/vars.css'
 import '../styles/global.css'
+import Layout from '../layout'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
-      <Component {...pageProps} />
+
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+
     </AuthProvider>
   )
 }

@@ -11,6 +11,8 @@ import Router from 'next/router'
 import self from '../services/self'
 import useLocalStorage from '../hooks/useLocalStorage'
 
+
+
 type User = string
 
 type SignInData = {
@@ -25,10 +27,10 @@ type AuthContextType = {
   loading: boolean
   setLoading: Dispatch<SetStateAction<boolean>>
   isAuthenticated: boolean
+  loginError: boolean
   user: User
   signIn: (data: SignInData) => Promise<void>
   signOut: () => Promise<void>
-  verifyLogin: () => Promise<void>
 }
 
 export const AuthContext = createContext({} as AuthContextType)
@@ -37,6 +39,7 @@ export function AuthProvider({ children }) {
   const [application, setApplication, removeApplication] =
     useLocalStorage('@auth: app')
   const [loading, setLoading] = useState(true)
+  const [loginError, setLoginError] = useState(false)
   const [user, setUser] = useState<User | null>(null)
   const isAuthenticated = !!user
 
@@ -46,30 +49,39 @@ export function AuthProvider({ children }) {
       const { 'nextauth.token': token } = parseCookies()
 
       if (token) {
-        verifyLogin()
+        verifyLogin(application)
       } else {
-        signOut()
+        setLoading(false)
       }
     } catch (err) {
       console.log(err)
     }
-    setLoading(false)
+    console.log(parseCookies())
+    console.log(user)
   }, [user])
 
-  async function verifyLogin() {
-    try {
-      const res = await self.get(`/api/login/verify/${application}`)
-      if (res.data.user) {
-        setUser(res.data.user)
-        Router.push(`/dashboard/${application}`)
-      } else {
+    async function verifyLogin(application) {
+    if (application !== null) {
+      try {
+        setLoginError(false)
+        const res = await self.get(`/api/login/verify/${application}`)
+        if (res.data.user) {
+          setUser(res.data.user)
+          await Router.push(`/dashboard/${application}`)
+        } else {
+          signOut()
+          setLoginError(true)
+        }
+      } catch (err) {
+        console.log(err)
+        setLoginError(true)
         signOut()
       }
-    } catch (err) {
-      console.log(err)
-      signOut()
+      setLoading(false)
     }
+
   }
+
 
   async function signIn({ app, username, password }: SignInData) {
     setLoading(true)
@@ -81,23 +93,21 @@ export function AuthProvider({ children }) {
         password
       })
       const token = res.data
-
       setCookie(undefined, 'nextauth.token', token, {
         maxAge: 60 * 60 * 1 // 1 hour
       })
     } catch (err) {
       console.log(err)
     }
-    verifyLogin()
-    setLoading(false)
+    verifyLogin(app)
   }
 
   async function signOut() {
 
     setLoading(true)
+    await removeApplication()
     destroyCookie(undefined, 'nextauth.token')
     setUser(null)
-    removeApplication()
     Router.push('/')
     setLoading(false)
   }
@@ -113,7 +123,7 @@ export function AuthProvider({ children }) {
         isAuthenticated,
         signIn,
         signOut,
-        verifyLogin
+        loginError,
       }}
     >
       {children}

@@ -1,8 +1,9 @@
 import Head from 'next/head'
-import { Form, Input, Button, Select } from 'antd'
+import { Form, Input, Button, Select, Alert, notification } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 
 import useAuth from '../hooks/useAuth'
+import { useEffect, useState } from 'react'
 
 const cardStyle = {
   display: 'flex',
@@ -12,7 +13,19 @@ const cardStyle = {
 } as React.CSSProperties
 
 export default function Login() {
-  const { signIn } = useAuth()
+  const { signIn, loginError } = useAuth()
+
+  useEffect(()=>{
+    if(loginError){
+
+        notification.error({
+          message: 'Login incorreto',
+          description:
+            'Usuário ou senha incorreta.'
+        });
+
+    }
+  },[loginError])
 
   async function handleSignIn(e) {
     await signIn({ app: e.app, username: e.username, password: e.password })
@@ -67,6 +80,14 @@ export default function Login() {
               Log in
             </Button>
           </Form.Item>
+          {loginError &&
+            <Alert
+              message="Login incorreto"
+              description='Usuário ou senha incorreta.'
+              type="error"
+              showIcon
+            />
+          }
         </Form>
       </div>
     </div>
