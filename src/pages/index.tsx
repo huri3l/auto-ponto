@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { Form, Input, Button, Select, Alert, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 
-import useAuth from '../hooks/useAuth'
+import useAuth from '@/hooks/useAuth'
 
 const cardStyle = {
   display: 'flex',

@@ -7,7 +7,7 @@ import {
   LogoutOutlined
 } from '@ant-design/icons'
 
-import useAuth from '../../hooks/useAuth'
+import useAuth from '@/hooks/useAuth'
 
 const { Header, Sider, Content } = Layout
 

@@ -8,8 +8,8 @@ import {
 import { setCookie, parseCookies, destroyCookie } from 'nookies'
 import Router from 'next/router'
 
-import self from '../services/self'
-import useLocalStorage from '../hooks/useLocalStorage'
+import self from '@/services/self'
+import useLocalStorage from '@/hooks/useLocalStorage'
 
 type User = string
 

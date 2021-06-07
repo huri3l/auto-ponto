@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { GetServerSideProps } from 'next'
 import { parseCookies } from 'nookies'
 
-import DashboardLayout from '../../layouts/dashboard'
+import DashboardLayout from '@/layouts/dashboard'
 
 export default function Dashboard() {
   return (

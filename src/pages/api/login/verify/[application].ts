@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { parseCookies } from 'nookies'
 
-import api from '../../../../services/api'
+import api from '@/services/api'
 
 export default async function verify(
   request: NextApiRequest,

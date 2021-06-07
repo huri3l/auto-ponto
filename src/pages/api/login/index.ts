@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import api from '../../../services/api'
+import api from '@/services/api'
 
 export default async function login(
   request: NextApiRequest,
