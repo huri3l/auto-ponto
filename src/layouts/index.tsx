@@ -1,7 +1,7 @@
 import Loading from '@/components/loading'
-import useAuth from '@/hooks/useAuth'
+import { useLoading } from '@/hooks/useLoading'
 
 export default function Layout({ children }) {
-  const { loading } = useAuth()
+  const { loading } = useLoading()
   return <>{loading ? <Loading /> : children}</>
 }

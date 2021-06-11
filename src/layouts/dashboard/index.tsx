@@ -7,12 +7,12 @@ import {
   LogoutOutlined
 } from '@ant-design/icons'
 
-import useAuth from '@/hooks/useAuth'
+import { useLogin } from '@/hooks/useLogin'
 
 const { Header, Sider, Content } = Layout
 
 export default function DashboardLayout({ children }) {
-  const { signOut } = useAuth()
+  const { signOut } = useLogin()
   const [collapsed, setCollapsed] = useState(true)
 
   return (

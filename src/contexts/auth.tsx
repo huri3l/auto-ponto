@@ -1,11 +1,12 @@
 import {
-  createContext,
   Dispatch,
   SetStateAction,
+  useCallback,
   useEffect,
   useState
 } from 'react'
 import { setCookie, parseCookies, destroyCookie } from 'nookies'
+import { createContext } from 'use-context-selector'
 import Router from 'next/router'
 
 import self from '@/services/self'
@@ -56,14 +57,14 @@ export function AuthProvider({ children }) {
     }
   }, [user])
 
-  async function verifyLogin(application) {
-    if (application !== null) {
+  const verifyLogin = useCallback(async app => {
+    if (app !== null) {
       try {
         setLoginError(false)
-        const res = await self.get(`/api/login/verify/${application}`)
+        const res = await self.get(`/api/login/verify/${app}`)
         if (res.data.user) {
           setUser(res.data.user)
-          await Router.push(`/dashboard/${application}`)
+          await Router.push(`/dashboard/${app}`)
         } else {
           signOut()
           setLoginError(true)
@@ -75,35 +76,38 @@ export function AuthProvider({ children }) {
       }
     }
     setLoading(false)
-  }
+  }, [])
 
-  async function signIn({ app, username, password }: SignInData) {
-    setLoading(true)
-    try {
-      setApplication(app)
-      const res = await self.post('/api/login', {
-        application: app,
-        username,
-        password
-      })
-      const token = res.data
-      setCookie(undefined, 'nextauth.token', token, {
-        maxAge: 60 * 60 * 1 // 1 hour
-      })
-    } catch (err) {
-      console.log(err)
-    }
-    verifyLogin(app)
-  }
+  const signIn = useCallback(
+    async ({ app, username, password }: SignInData) => {
+      setLoading(true)
+      try {
+        setApplication(app)
+        const res = await self.post('/api/login', {
+          application: app,
+          username,
+          password
+        })
+        const token = res.data
+        setCookie(undefined, 'nextauth.token', token, {
+          maxAge: 60 * 60 * 1 // 1 hour
+        })
+      } catch (err) {
+        console.log(err)
+      }
+      verifyLogin(app)
+    },
+    []
+  )
 
-  async function signOut() {
+  const signOut = useCallback(async () => {
     setLoading(true)
     await removeApplication()
     destroyCookie(undefined, 'nextauth.token')
     setUser(null)
     Router.push('/')
     setLoading(false)
-  }
+  }, [])
 
   return (
     <AuthContext.Provider

@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { Form, Input, Button, Select, Alert, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 
-import useAuth from '@/hooks/useAuth'
+import { useLogin } from '@/hooks/useLogin'
 
 const cardStyle = {
   display: 'flex',
@@ -13,7 +13,7 @@ const cardStyle = {
 } as React.CSSProperties
 
 export default function Login() {
-  const { signIn, loginError } = useAuth()
+  const { signIn, loginError } = useLogin()
 
   useEffect(() => {
     if (loginError) {
