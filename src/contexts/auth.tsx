@@ -55,7 +55,7 @@ export function AuthProvider({ children }) {
     } catch (err) {
       console.log(err)
     }
-  }, [user])
+  }, [])
 
   const verifyLogin = useCallback(async app => {
     if (app !== null) {
